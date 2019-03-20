@@ -1,10 +1,11 @@
 #include "person.cpp"
 #include <fstream> 
 #include <iostream> 
+#include <vector>
 #include <string> 
 using namespace std; 
 int num = 0; 
-void readData(Person array[], int size)
+void readData(vector<Person> &employees)
 {
 	string fName; 
 	string lName; 
@@ -20,10 +21,7 @@ void readData(Person array[], int size)
 		{
 			file >> lName >> pay >> hours; 
 			getline(file, line); 
-			array[i].setFirstName(fName); 
-			array[i].setLastName(lName); 
-			array[i].setPayRate(pay); 
-			array[i].setHoursWorked(hours);
+			employees.emplace_back(fName, lName, pay, hours); 
 			num++; 
 			i++;
 			file >> fName; 
@@ -31,17 +29,17 @@ void readData(Person array[], int size)
 	}
 	file.close(); 
 }
-void writeData(Person array[], int size)
+void writeData(vector<Person> &employees)
 {
 	string fullName; 
 	float total; 
 	ofstream file("output.txt"); 
 	if(file.is_open())
 	{
-		for(int i = 0; i < num; i++)
+		for(int i = 0; i < employees.size(); i++)
 		{
-			fullName = array[i].fullName(); 
-			total = array[i].totalPay(); 
+			fullName = employees[i].fullName();  
+			total = employees[i].totalPay(); 
 			file << fullName << " " << total << endl; 
 			cout << fullName << " " << total << endl; 
 		}
@@ -50,10 +48,9 @@ void writeData(Person array[], int size)
 }
 int main()
 {
-	int size = 20; 
-	Person employees[size]; 
-	readData(employees, 6); 
-	writeData(employees, 6); 
+	vector<Person> employees; 
+	readData(employees); 
+	writeData(employees); 
 	system("PAUSE"); 
 	return 0; 
 }
